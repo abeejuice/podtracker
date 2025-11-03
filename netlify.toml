@@ -1,0 +1,64 @@
+# Netlify Configuration for POD Tracker
+# This file configures how Netlify builds and deploys your full-stack application
+
+[build]
+  # Build command - installs dependencies and builds the frontend
+  command = "npm install --prefix frontend && npm run build --prefix frontend"
+
+  # Directory to publish - the compiled frontend static files
+  publish = "frontend/dist"
+
+  # Directory containing serverless functions
+  functions = "netlify/functions"
+
+# Redirect all /api/* requests to the serverless function
+# This allows the frontend to call /api/patients without hardcoding the function URL
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Health check endpoint redirect
+[[redirects]]
+  from = "/"
+  to = "/.netlify/functions/api/"
+  status = 200
+  force = false
+  conditions = {Role = ["admin"]}
+
+# SPA fallback - serve index.html for all routes not matched above
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and CORS (applied to all pages)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets aggressively
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Function configuration
+[functions]
+  # Directory containing function source code
+  directory = "netlify/functions"
+
+  # Use Node.js 18 runtime
+  node_bundler = "esbuild"
+
+# Environment variables (set these in Netlify UI)
+# Required:
+#   MONGO_URI - Your MongoDB Atlas connection string
+# Optional:
+#   FRONTEND_URL - Your Netlify site URL (for CORS)
+#   NODE_ENV=production - Set automatically by Netlify
