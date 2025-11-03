@@ -2,9 +2,9 @@
 # This file configures how Netlify builds and deploys your full-stack application
 
 [build]
-  # Build command - installs dependencies for both backend and frontend
-  # Backend deps needed for serverless function bundling
-  command = "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
+  # Build command - install root deps (for functions), then build frontend
+  # Root package.json contains serverless dependencies
+  command = "npm install && npm install --prefix frontend && npm run build --prefix frontend"
 
   # Directory to publish - the compiled frontend static files
   publish = "frontend/dist"
@@ -48,11 +48,8 @@
   # Directory containing function source code
   directory = "netlify/functions"
 
-  # Let Netlify use default bundler (avoids neon/esbuild plugin issues)
-  # node_bundler defaults to esbuild_zisi which works better
-
-  # Include backend node_modules for function bundling
-  included_files = ["backend/node_modules/**"]
+  # Let Netlify use default bundler
+  # Dependencies are installed at root level (package.json)
 
 # Environment variables (set these in Netlify UI)
 # Required:
