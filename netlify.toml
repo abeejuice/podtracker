@@ -17,15 +17,6 @@
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
-  force = true
-
-# Health check endpoint redirect
-[[redirects]]
-  from = "/"
-  to = "/.netlify/functions/api/"
-  status = 200
-  force = false
-  conditions = {Role = ["admin"]}
 
 # SPA fallback - serve index.html for all routes not matched above
 [[redirects]]
@@ -53,8 +44,8 @@
   # Directory containing function source code
   directory = "netlify/functions"
 
-  # Use Node.js 18 runtime
-  node_bundler = "esbuild"
+  # Let Netlify use default bundler (avoids neon/esbuild plugin issues)
+  # node_bundler defaults to esbuild_zisi which works better
 
 # Environment variables (set these in Netlify UI)
 # Required:
