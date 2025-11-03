@@ -2,14 +2,18 @@
 # This file configures how Netlify builds and deploys your full-stack application
 
 [build]
-  # Build command - installs dependencies and builds the frontend
-  command = "npm install --prefix frontend && npm run build --prefix frontend"
+  # Build command - installs dependencies for both backend and frontend
+  # Backend deps needed for serverless function bundling
+  command = "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
 
   # Directory to publish - the compiled frontend static files
   publish = "frontend/dist"
 
   # Directory containing serverless functions
   functions = "netlify/functions"
+
+  # Environment variables for build
+  environment = { SECRETS_SCAN_OMIT_KEYS = "PORT" }
 
 # Redirect all /api/* requests to the serverless function
 # This allows the frontend to call /api/patients without hardcoding the function URL
@@ -46,6 +50,9 @@
 
   # Let Netlify use default bundler (avoids neon/esbuild plugin issues)
   # node_bundler defaults to esbuild_zisi which works better
+
+  # Include backend node_modules for function bundling
+  included_files = ["backend/node_modules/**"]
 
 # Environment variables (set these in Netlify UI)
 # Required:
