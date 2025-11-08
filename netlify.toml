@@ -48,13 +48,8 @@
   # Directory containing function source code
   directory = "netlify/functions"
 
-  # Use Node File Trace bundler - designed for external imports
-  # This bundler can properly follow and bundle imports from ../backend
-  node_bundler = "nft"
-
-  # External node modules pattern - tells bundler which imports are external
-  # Everything from backend/ should be bundled (not treated as external)
-  external_node_modules = []
+  # No bundler config needed - function is self-contained in a single file
+  # All code (models, controllers, routes, DB logic) is in netlify/functions/api.js
 
 # Environment variables (set these in Netlify UI)
 # Required:
