@@ -210,11 +210,14 @@ async function buildApp() {
   });
 
   // Patient routes
-  app.post('/api/patients', createPatient);
-  app.get('/api/patients', getPatients);
-  app.get('/api/patients/:id', getPatient);
-  app.put('/api/patients/:id', updatePatient);
-  app.delete('/api/patients/:id', deletePatient);
+  // NOTE: Routes don't include /api/ prefix because Netlify redirect handles it
+  // Frontend calls /api/patients → Netlify redirects to /.netlify/functions/api/patients
+  // Express receives /patients (the :splat part after /api/)
+  app.post('/patients', createPatient);
+  app.get('/patients', getPatients);
+  app.get('/patients/:id', getPatient);
+  app.put('/patients/:id', updatePatient);
+  app.delete('/patients/:id', deletePatient);
 
   // 404 handler
   app.use((req, res) => {
@@ -223,11 +226,11 @@ async function buildApp() {
       message: `Route ${req.method} ${req.path} not found`,
       availableRoutes: [
         'GET /',
-        'GET /api/patients',
-        'POST /api/patients',
-        'GET /api/patients/:id',
-        'PUT /api/patients/:id',
-        'DELETE /api/patients/:id'
+        'GET /patients',
+        'POST /patients',
+        'GET /patients/:id',
+        'PUT /patients/:id',
+        'DELETE /patients/:id'
       ]
     });
   });
