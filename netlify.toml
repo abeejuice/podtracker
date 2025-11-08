@@ -48,8 +48,9 @@
   # Directory containing function source code
   directory = "netlify/functions"
 
-  # Let Netlify use default bundler
-  # Dependencies are installed at root level (package.json)
+  # Include backend source files when bundling the function
+  # The serverless function imports from backend/, so include all source files
+  included_files = ["backend/**/*.js"]
 
 # Environment variables (set these in Netlify UI)
 # Required:
